@@ -22,7 +22,7 @@ jobs:
         run: |
           echo "::set-output name=branch_name::$(date '+%Y-%m-%dT%H:%M:%SZ')"
       
-      - name: Notify Check 1
+      - name: Notify MyCheck (in progress)
         uses: LouisBrunner/checks-action@v1.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -34,9 +34,9 @@ jobs:
 
       - name: Sleep
         run: |
-          sleep 30
+          sleep 10
           
-      - name: Notify Check 2
+      - name: Notify MyCheck (completed)
         uses: LouisBrunner/checks-action@v1.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -46,6 +46,24 @@ jobs:
           action_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           details_url: 'https://github.com/shimat'
           annotations: |
-            {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"}
+            [
+              {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"}
+            ]
           output: |
-            {"summary":"Test Output (completed)"}
+            {"summary":"Test Output (completed)\nhttps://github.com/shimat"}
+          
+      - name: Notify another check
+        uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: ErrorCheck
+          status: completed
+          conclusion: failure
+          action_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+          details_url: 'https://github.com/shimat'
+          actions: |
+            [
+              {"label":"label", "description":"description", "identifier":"identifier"}
+            ]
+          output: |
+            {"summary":"Test Output (failed)"}
