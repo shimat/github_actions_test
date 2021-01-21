@@ -53,7 +53,14 @@ jobs:
               {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"}
             ]
           output: |
-            {"summary":"Test Output (completed)\nhttps://github.com/shimat"}
+            {
+              "title": "title",
+              "summary":"Test Output (completed)\nhttps://github.com/shimat",
+              "text": "text",
+              "annotations": [                
+                {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"}
+              ]
+            }
           
       - name: Notify another check
         uses: LouisBrunner/checks-action@v1.1.1
