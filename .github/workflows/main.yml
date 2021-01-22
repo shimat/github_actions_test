@@ -37,7 +37,7 @@ jobs:
 
       - name: MyCheck curl
         run: |
-          PAYLOAD='{"name":"MyCheckCurl", "head_sha":"${GITHUB_SHA}", "status":"in_progress", \
+          PAYLOAD='{"name":"MyCheckCurl", "head_sha":"'${GITHUB_SHA}'", "status":"in_progress", \
                   "output":{ \
                     "title":"title", "summary":"summary", "text":"text",
                     "annotations": [ \
