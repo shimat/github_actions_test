@@ -49,7 +49,7 @@ jobs:
                     ] \
                   } \
                 }' \
-            https://api.github.com/${{ github.repository }}/check-runs
+            https://api.github.com/repos/${{ github.repository }}/check-runs
 
       - name: Sleep
         run: |
