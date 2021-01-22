@@ -37,20 +37,20 @@ jobs:
 
       - name: MyCheck curl
         run: |
-          PAYLOAD='{"name":"MyCheckCurl", "head_sha":"'${GITHUB_SHA}'", "status":"in_progress", \
-                  "output":{ \
+          PAYLOAD='{"name":"MyCheckCurl", "head_sha":"'${GITHUB_SHA}'", "status":"in_progress", 
+                  "output":{ 
                     "title":"title", "summary":"summary", "text":"text",
-                    "annotations": [ \
-                      {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"} \
-                    ] \
-                  } \
+                    "annotations": [ 
+                      {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"} 
+                    ] 
+                  } 
                 }'
-          echo ${PAYLOAD}
+          echo "${PAYLOAD}"
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Content-Type: application/vnd.github.v3+json" \
-            -d '${PAYLOAD}' \
+            -d "${PAYLOAD}" \
             https://api.github.com/repos/${{ github.repository }}/check-runs
 
       - name: Sleep
