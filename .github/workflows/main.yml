@@ -37,6 +37,7 @@ jobs:
 
       - name: MyCheck curl
         run: |
+          echo ${GITHUB_SHA}
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
