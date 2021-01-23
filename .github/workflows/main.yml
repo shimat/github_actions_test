@@ -37,11 +37,11 @@ jobs:
 
       - name: MyCheck curl
         run: |
-          PAYLOAD='{"name":"build", "head_sha":"'${GITHUB_SHA}'", "status":"completed", "conclusion":"success", 
+          PAYLOAD='{"name":"MyCheckCurl", "head_sha":"'${GITHUB_SHA}'", "status":"completed", "conclusion":"success", 
                   "output":{ 
                     "title":"title", "summary":"summary. link: https://github.com/shimat", "text":"text. link: https://github.com/shimat",
                     "annotations": [ 
-                      {"path":"foo.txt", "start_line":40, "end_line":41, "annotation_level":"notice",
+                      {"path":"foo.txt", "start_line":40, "end_line":41, "annotation_level":"warning",
                       "message":"message. link: https://github.com/shimat", 
                       "title":"title. link: https://github.com/shimat"} 
                     ] 
