@@ -43,6 +43,9 @@ jobs:
                     "annotations": [ 
                       {"path":"foo.txt", "start_line":40, "end_line":41, "annotation_level":"warning",
                       "message":"message. link: https://github.com/shimat", 
+                      "title":"title. link: https://github.com/shimat"} ,
+                      {"path":"foo.txt", "start_line":40, "end_line":41, "annotation_level":"failure",
+                      "message":"message. link: https://github.com/shimat", 
                       "title":"title. link: https://github.com/shimat"} 
                     ] 
                   } 
