@@ -35,9 +35,9 @@ jobs:
 #          output: |
 #            {"summary":"Test Output (in progress)"}
 
-      - name: build
+      - name: MyCheck curl
         run: |
-          PAYLOAD='{"name":"MyCheckCurl", "head_sha":"'${GITHUB_SHA}'", "status":"completed", "conclusion":"success", 
+          PAYLOAD='{"name":"build", "head_sha":"'${GITHUB_SHA}'", "status":"completed", "conclusion":"success", 
                   "output":{ 
                     "title":"title", "summary":"summary. link: https://github.com/shimat", "text":"text. link: https://github.com/shimat",
                     "annotations": [ 
