@@ -2,6 +2,7 @@ name: Issue Comments
 
 on:
   issue_comment:
+    types: [created, edited]
 
 jobs:
   check_comments:
@@ -21,3 +22,14 @@ jobs:
 
       - name: Act on the command
         run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
+
+      - name: 'Post Comment'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "イベント発生 (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')"
