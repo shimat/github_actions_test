@@ -25,6 +25,9 @@ jobs:
 
       - name: 'Post Comment'
         uses: actions/github-script@v3
+        env:
+          MESSAGE: |
+            イベント発生 (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -32,4 +35,4 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "イベント発生 (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')"
+              body: process.env.MESSAGE
