@@ -4,8 +4,6 @@ name: CI
 on:
   pull_request:
     types: [synchronize, opened]
-  issue_comment:
-    types: [created, edited]
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
