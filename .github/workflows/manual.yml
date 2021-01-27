@@ -1,4 +1,4 @@
-name: Manual ${{ github.event.inputs.foo }}
+name: Manual
 
 on:
   workflow_dispatch:
