@@ -2,7 +2,7 @@ name: Manual ${{ github.event.inputs.foo }}
 
 on:
   workflow_dispatch:
-    input:      
+    inputs:      
       foo:
         description: 'Foo'
         required: true
