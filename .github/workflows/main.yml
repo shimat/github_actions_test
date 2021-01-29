@@ -4,8 +4,6 @@ name: CI
 on:
   pull_request:
     types: [synchronize, opened]
-  issue_comment:
-    types: [created, edited]
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -25,19 +23,42 @@ jobs:
         run: |
           echo "::set-output name=branch_name::$(date '+%Y-%m-%dT%H:%M:%SZ')"
       
-      - name: Notify MyCheck (in progress)
-        uses: LouisBrunner/checks-action@v1.1.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: MyCheck
-          status: in_progress
-          action_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
-          output: |
-            {"summary":"Test Output (in progress)"}
+#      - name: Notify MyCheck (in progress)
+#        uses: LouisBrunner/checks-action@v1.1.1
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          name: MyCheck
+#          status: in_progress
+#          action_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+#          output: |
+#            {"summary":"Test Output (in progress)"}
+
+      - name: MyCheck curl
+        run: |
+          PAYLOAD='{"name":"MyCheckCurl", "head_sha":"'${GITHUB_SHA}'", "status":"completed", "conclusion":"success", 
+                  "output":{ 
+                    "title":"title", "summary":"summary. link: https://github.com/shimat", "text":"text. link: https://github.com/shimat",
+                    "annotations": [ 
+                      {"path":"foo.txt", "start_line":40, "end_line":41, "annotation_level":"warning",
+                      "message":"message. link: https://github.com/shimat", 
+                      "title":"title. link: https://github.com/shimat"} ,
+                      {"path":"foo.txt", "start_line":40, "end_line":41, "annotation_level":"failure",
+                      "message":"message. link: https://github.com/shimat", 
+                      "title":"title. link: https://github.com/shimat"} 
+                    ] 
+                  } 
+                }'
+          echo "${PAYLOAD}"
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Content-Type: application/vnd.github.v3+json" \
+            -d "${PAYLOAD}" \
+            https://api.github.com/repos/${{ github.repository }}/check-runs
 
       - name: Sleep
         run: |
-          sleep 10
+          sleep 5
           
       - name: Notify MyCheck (completed)
         uses: LouisBrunner/checks-action@v1.1.1
@@ -45,7 +66,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: MyCheck
           status: completed
-          conclusion: success
+          conclusion: neutral
           action_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
           details_url: 'https://github.com/shimat'
           annotations: |
@@ -53,7 +74,14 @@ jobs:
               {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"}
             ]
           output: |
-            {"summary":"Test Output (completed)\nhttps://github.com/shimat"}
+            {
+              "title": "title",
+              "summary":"Test Output (completed)\nhttps://github.com/shimat",
+              "text": "text",
+              "annotations": [                
+                {"path":"foo.txt", "start_line":1, "end_line":2, "annotation_level":"notice", "message":"message", "title":"title"}
+              ]
+            }
           
       - name: Notify another check
         uses: LouisBrunner/checks-action@v1.1.1
