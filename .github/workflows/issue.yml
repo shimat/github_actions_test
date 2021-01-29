@@ -54,6 +54,8 @@ jobs:
       env:
         MESSAGE: |
           デプロイを開始しました (名前:'${{ needs.prerequisites.outputs.command_name }}', 引数:'${{ needs.prerequisites.outputs.command_arguments }}')
+          ブランチ: ${{ steps.comment-branch.outputs.head_ref }}
+          SHA: ${{ steps.comment-branch.outputs.head_sha }}
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
