@@ -1,49 +1,93 @@
-name: Issue Comments
+name: "Deploy"
 
 on:
   issue_comment:
     types: [created, edited]
 
-jobs:
-  check_comments:
-    name: Check comments for /deploy
+jobs:  
+  # 対象のブランチを決定
+  prerequisites:
+    name: "Prerequisites"
     runs-on: ubuntu-latest
     steps:
-      - name: Check for Command
-        id: command
-        uses: xt0rted/slash-command-action@v1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: deploy
-          reaction: "true"
-          reaction-type: "eyes"
-          allow-edits: "false"
-          permission-level: admin
+    - name: Check for Command
+      id: command
+      uses: xt0rted/slash-command-action@065da288bcfe24ff96b3364c7aac1f6dca0fb027 #1.1.0
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        command: deploy
+        reaction: "true"
+        reaction-type: "eyes"
 
-      - name: 'Get branch name'
-        uses: xt0rted/pull-request-comment-branch@29fe0354c01b30fb3de76f193ab33abf8fe5ddb0 #1.2.0
-        id: comment-branch
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Get upstream branch
+      uses: xt0rted/pull-request-comment-branch@29fe0354c01b30fb3de76f193ab33abf8fe5ddb0 #1.2.0
+      id: upstream_branch
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: |
-          echo "デプロイを開始しました (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')"
-          echo "ブランチ: ${{ steps.comment-branch.outputs.head_ref }}"
-          echo "SHA: ${{ steps.comment-branch.outputs.head_sha }}"
+    - name: Notify pending status
+      uses: hkusu/status-create-action@v1
+      with:
+        sha: ${{ steps.upstream_branch.outputs.sha }}
+        state: pending
+        description: Branch:${{steps.upstream_branch.outputs.branch_name}}
+        context: Deployment
+    outputs:
+      command_name: ${{ steps.command.outputs.command-name }}
+      command_arguments : ${{ steps.command.outputs.command-arguments }}
+      branch_name: ${{ steps.upstream_branch.outputs.head_ref }}
+      commit_sha: ${{ steps.upstream_branch.outputs.head_sha }}
 
-      - name: 'Post Comment'
-        uses: actions/github-script@v3
-        env:
-          MESSAGE: |
-            デプロイを開始しました (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')
-            ブランチ: ${{ steps.comment-branch.outputs.head_ref }}
-            SHA: ${{ steps.comment-branch.outputs.head_sha }}
+  # デプロイ処理
+  deploy:
+    needs: [prerequisites]
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ needs.prerequisites.outputs.branch_name }}
+
+    - name: 'Post Comment'
+      uses: actions/github-script@v3
+      env:
+        MESSAGE: |
+          デプロイを開始しました (名前:'${{ needs.prerequisites.outputs.command_name }}', 引数:'${{ needs.prerequisites.outputs.command_arguments }}')
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: process.env.MESSAGE
+          })
+
+    - name: 'Deploy'
+      run: |
+        sleep 30  # デプロイ作業のつもり
+
+    - name: 'Notify successful status'
+      uses: hkusu/status-create-action@v1
+      with:
+        sha: ${{ needs.prerequisites.outputs.commit_sha }}
+        state: success
+        context: Deployment
+        description: Successful
+
+  # エラーの際の通知
+  error_notification:
+    name: "Notify failure status"
+    if: failure() &&
+      needs.prerequisites.outputs.commit_sha != null
+    needs: [prerequisites, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify pending status
+        uses: hkusu/status-create-action@v1
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: process.env.MESSAGE
-            })
+          sha: ${{ needs.prerequisites.outputs.commit_sha }}
+          state: failure
+          description: "Failed"
+          context: Deployment    
