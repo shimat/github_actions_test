@@ -26,6 +26,11 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - run: |
+          echo "デプロイを開始しました (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')"
+          echo "ブランチ: ${{ steps.comment-branch.outputs.head_ref }}"
+          echo "SHA: ${{ steps.comment-branch.outputs.head_sha }}"
+
       - name: 'Post Comment'
         uses: actions/github-script@v3
         env:
