@@ -49,7 +49,7 @@ jobs:
       with:
         ref: ${{ needs.prerequisites.outputs.branch_name }}
 
-    - name: 'Post Comment'
+    - name: 'Post Comment (Start)'
       uses: actions/github-script@v3
       env:
         MESSAGE: |
@@ -75,6 +75,21 @@ jobs:
         state: success
         context: Deployment
         description: Successful
+        
+    - name: 'Post Comment (End)'
+      uses: actions/github-script@v3
+      env:
+        MESSAGE: |
+          デプロイが完了しました
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: process.env.MESSAGE
+          })
 
   # エラーの際の通知
   error_notification:
