@@ -6,7 +6,7 @@ on:
 
 jobs:
   check_comments:
-    name: Check comments for /test
+    name: Check comments for /deploy
     runs-on: ubuntu-latest
     steps:
       - name: Check for Command
@@ -14,7 +14,7 @@ jobs:
         uses: xt0rted/slash-command-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          command: test
+          command: deploy
           reaction: "true"
           reaction-type: "eyes"
           allow-edits: "false"
@@ -27,7 +27,7 @@ jobs:
         uses: actions/github-script@v3
         env:
           MESSAGE: |
-            イベント発生 (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')
+            デプロイを開始しました (名前:'${{ steps.command.outputs.command-name }}', 引数:'${{ steps.command.outputs.command-arguments }}')
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
