@@ -2,16 +2,16 @@ name: Manual
 
 on:
   workflow_dispatch:
-    inputs:      
-      foo:
-        description: 'Foo'
+    inputs:
+      deploy_env:
+        description: 'デプロイ先の環境 (dev/stg/prod)'
         required: true
 
 jobs:
   build:
-    name: ${{ github.event.inputs.foo }}
+    name: Deploy to ${{ github.event.inputs.deploy_env }}
     runs-on: ubuntu-latest
 
     steps:
       - run: |
-          echo ${{ github.event.inputs.foo }}
+          echo ${{ github.event.inputs.deploy_env }}
