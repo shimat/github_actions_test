@@ -13,5 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: |
-          echo ${{ github.event.inputs.deploy_env }}
+      - name: 'Notify'
+        run: |
+          PAYLOAD='
+            {"name":"Result", "head_sha":"'${GITHUB_SHA}'", "status":"completed", "conclusion":"success", 
+              "output":{ 
+                "title":"My Message", "summary":"デプロイが完了しました (環境: $${{github.event.inputs.deploy_env}})"
+              } 
+            }'
+          echo "${PAYLOAD}"
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Content-Type: application/vnd.github.v3+json" \
+            -d "${PAYLOAD}" \
+            https://api.github.com/repos/${{ github.repository }}/check-runs
