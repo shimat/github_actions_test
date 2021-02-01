@@ -18,7 +18,7 @@ jobs:
           PAYLOAD='
             {"name":"Result", "head_sha":"'${GITHUB_SHA}'", "status":"completed", "conclusion":"success", 
               "output":{ 
-                "title":"My Message", "summary":"デプロイが完了しました (環境: $${{github.event.inputs.deploy_env}})"
+                "title":"My Message", "summary":"デプロイが完了しました (環境: ${{github.event.inputs.deploy_env}})"
               } 
             }'
           echo "${PAYLOAD}"
