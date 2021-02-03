@@ -2,7 +2,8 @@ name: MSBuild
 
 on:
   push:
-    branches: [main]
+    branches: 
+      - main
   workflow_dispatch:
 
 jobs:
@@ -10,10 +11,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
     
-    - run: |
-        msbuild -version
+      - run: |
+          msbuild -version
