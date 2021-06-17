@@ -10,16 +10,14 @@ on:
 
 jobs:
   A:
-    # name: ${{ github.event.inputs.foo }}
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "A"
-          exit 1
+          echo "A"  
 
   B:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.foo == 'B' }}
+    if: ${{ github.event.inputs.foo == 'AAAAAAAAA' }}  
     steps:
       - run: |
           echo "B"
@@ -27,11 +25,11 @@ jobs:
   C:
     runs-on: ubuntu-latest
     needs: [A, B]
-    if: always()
+    if: always() && needs.A.result != 'failure' && needs.B.result != 'failure'
     steps:
       - run: |
-          echo "${{ needs.A.result }}"
-          echo "${{ needs.B.result }}"
+          echo "${{ needs.A.result }}"  # success
+          echo "${{ needs.B.result }}"  # skip
           echo "C"
 
   D:
@@ -39,4 +37,5 @@ jobs:
     needs: [C]
     steps:
       - run: |
+          echo "${{ needs.C.result }}"
           echo "D"
