@@ -30,7 +30,7 @@ jobs:
     steps:
       - run: |
           echo "${{ needs.A.result }}"  # success
-          echo "${{ needs.B.result }}"  # skip
+          echo "${{ needs.B.result }}"  # skipped
           echo "C"
 
   D:
