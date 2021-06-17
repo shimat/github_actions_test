@@ -29,8 +29,8 @@ jobs:
     if: always()
     steps:
       - run: |
-          echo "${{needs.A.status}}"
-          echo "${{needs.B.status}}"
+          echo "${{ needs.A.result }}"
+          echo "${{ needs.B.result }}"
           echo "C"
 
   D:
