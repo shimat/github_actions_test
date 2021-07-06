@@ -9,6 +9,12 @@ on:
         default: ""
 
 jobs:
+  Z:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          a=$(ls)
+          
   A:
     runs-on: ubuntu-latest
     steps:
