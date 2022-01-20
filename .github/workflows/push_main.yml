@@ -5,13 +5,12 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
 
@@ -23,6 +22,15 @@ jobs:
           name: hoge
           path: hoge.txt
           
+  release:
+    if: github.event_name != 'pull_request'
+    needs: build
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v2
+    
       - name: Set tag name by date string
         run: echo "::set-output name=TAG_NAME::$(date +'%Y-%m-%d-%H%M%S')"
         id: date
