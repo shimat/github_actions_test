@@ -33,6 +33,8 @@ jobs:
           name: hoge
     
       - name: Set tag name by date string
+        env: 
+          TZ: -9
         run: echo "::set-output name=TAG_NAME::$(date +'%Y-%m-%d-%H%M%S')"
         id: date
 
