@@ -28,8 +28,9 @@ jobs:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v2
+        with:
+          name: hoge
     
       - name: Set tag name by date string
         run: echo "::set-output name=TAG_NAME::$(date +'%Y-%m-%d-%H%M%S')"
