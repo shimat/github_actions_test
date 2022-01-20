@@ -15,10 +15,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run a one-line script
+      - name: Create dummy artifact
         run: echo Hello, world! > hoge.txt
 
       - uses: actions/upload-artifact@v2
         with:
           name: hoge
           path: hoge.txt
+          
+      - name: Set tag name by date string
+        run: echo '::set-output name=TAG_NAME::$(date +"%Y-%m-%d-%H%M%S")'
+        id: date
+
+      - uses: ncipollo/release-action@40bb172bd05f266cf9ba4ff965cb61e9ee5f6d01 # v1.9.0
+        with:
+          artifacts: "hoge.txt"
+          body: |
+            - hoge
+            - fuga
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.date.outputs.TAG_NAME }}
