@@ -8,10 +8,6 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.changed_files, 'directory/foo.json')
     steps:
-      #- run: |
-      #    echo "${{ toJson(github.event.pull_request.changed_files) }}"
-      - if: contains(github.event.pull_request.changed_files, 'directory/foo.json')
-        run: echo "contain"
-      - if: contains(github.event.pull_request.changed_files, 'not_existing/foo.json')
-        run: echo "contain"
+      - run: echo "contain"
