@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "${{ github.event.pull_request.changed_files }}"
+          echo "${{ toJson(github.event.pull_request.changed_files) }}"
       - if: contains(github.event.pull_request.changed_files, 'directory/foo.json')
         run: echo "contain"
       - if: contains(github.event.pull_request.changed_files, 'not_existing/foo.json')
