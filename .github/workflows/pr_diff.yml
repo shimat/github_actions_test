@@ -6,8 +6,13 @@ on:
       - "**/foo.json"
 
 jobs:
-  check:
+  check1:
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.changed_files, 'directory/foo.json')
+    steps:
+      - run: echo "contain"
+  check2:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.changed_files, 'directory/bar.json')
     steps:
       - run: echo "contain"
