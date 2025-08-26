@@ -1,0 +1,14 @@
+name: "PR diff sample"
+
+on:
+  pull_request:
+    paths:
+      - "**/foo.json"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "${{ github.event.pull_request.changed_files }}"
+  
